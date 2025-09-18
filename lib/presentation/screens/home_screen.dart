@@ -44,7 +44,12 @@ class _HomeView extends StatelessWidget {
             title: Text(message.title),
             subtitle: Text(message.body),
             leading: message.imageUrl != null
-                ? Image.network(message.imageUrl!)
+                ? Image.network(
+                    message.imageUrl!,
+                    height: 100,
+                    width: 100,
+                    fit: BoxFit.contain,
+                  )
                 : null,
             trailing: message.data?.isNotEmpty == true
                 ? Icon(Icons.check, color: Colors.green)
