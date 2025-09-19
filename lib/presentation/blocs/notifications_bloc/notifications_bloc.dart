@@ -6,6 +6,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_push/config/helpers/helpers.dart';
+import 'package:flutter_push/config/local_notifications/local_notifications.dart';
 import 'package:flutter_push/domain/entities/entities.dart';
 import 'package:flutter_push/firebase_options.dart';
 
@@ -91,6 +92,16 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
       data: message.data,
       imageUrl: imageUrl,
     );
+
+    if (Platform.isAndroid) {
+      LocalNotificationService.showLocalNotification(
+        id: notification.hashCode,
+        title: notification.title,
+        body: notification.body,
+        data: parsedId,
+      );
+    }
+
     add(NotificationReceived(message: notification));
   }
 
@@ -108,6 +119,8 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
       provisional: false,
       sound: true,
     );
+
+    await LocalNotificationService.requestLocalNotificationsPermission();
 
     add(
       NotificationStatusChanged(
