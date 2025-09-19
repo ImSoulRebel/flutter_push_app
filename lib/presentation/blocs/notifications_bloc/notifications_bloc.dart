@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_push/config/helpers/helpers.dart';
 import 'package:flutter_push/domain/entities/entities.dart';
@@ -16,7 +17,7 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // make sure you call `initializeApp` before using other Firebase services.
   await Firebase.initializeApp();
 
-  print("Handling a background message: ${message.messageId}");
+  debugPrint('Handling a background message: ${message.messageId}');
 }
 
 class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
@@ -65,13 +66,17 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
   }
 
   Future<void> _getFirebaseNotificationsToken() async {
-    if (state.authorizationStatus != AuthorizationStatus.authorized) return;
+    if (state.authorizationStatus != AuthorizationStatus.authorized) {
+      return;
+    }
     String? token = await messaging.getToken();
-    print('Firebase Messaging Token: $token');
+    debugPrint('Firebase Messaging Token: $token');
   }
 
   void handleRemoteMessage(RemoteMessage message) {
-    if (message.notification == null) return;
+    if (message.notification == null) {
+      return;
+    }
     final parsedId = StringFormaters.messageIdParser(message.messageId!);
 
     final imageUrl = Platform.isAndroid

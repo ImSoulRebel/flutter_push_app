@@ -17,10 +17,10 @@ class NotificationDetailScreen extends StatelessWidget {
         .getMessageById(pushMessageId);
 
     return Scaffold(
-      appBar: AppBar(title: Text('Detalles de Notificación')),
+      appBar: AppBar(title: const Text('Detalles de Notificación')),
       body: message != null
           ? _NotificationDetailView(message: message)
-          : Center(child: Text('Notificación no encontrada')),
+          : const Center(child: Text('Notificación no encontrada')),
     );
   }
 }
@@ -39,12 +39,12 @@ class _NotificationDetailView extends StatelessWidget {
       child: Column(
         children: [
           if (message.imageUrl != null) Image.network(message.imageUrl!),
-          SizedBox(height: 16),
+          const SizedBox(height: 16),
           Text(message.title, style: textStyles.titleMedium),
           Text(message.body),
           const Divider(),
           if (message.data != null && message.data!.isNotEmpty) ...[
-            Text('Datos Adicionales:'),
+            const Text('Datos Adicionales:'),
             ...message.data!.entries.map(
               (entry) => Text('${entry.key}: ${entry.value}'),
             ),

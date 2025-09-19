@@ -13,18 +13,18 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         title: context.select(
           (NotificationsBloc bloc) =>
-              Text("Permisos ${bloc.state.authorizationStatus.name}"),
+              Text('Permisos ${bloc.state.authorizationStatus.name}'),
         ),
 
         actions: [
           IconButton(
             onPressed: () =>
                 context.read<NotificationsBloc>().requestPermission(),
-            icon: Icon(Icons.settings),
+            icon: const Icon(Icons.settings),
           ),
         ],
       ),
-      body: _HomeView(),
+      body: const _HomeView(),
     );
   }
 }
@@ -52,7 +52,7 @@ class _HomeView extends StatelessWidget {
                   )
                 : null,
             trailing: message.data?.isNotEmpty == true
-                ? Icon(Icons.check, color: Colors.green)
+                ? const Icon(Icons.check, color: Colors.green)
                 : null,
             onTap: () =>
                 context.push('/notification-detail/${message.messageId}'),
