@@ -1,4 +1,5 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_push/config/router/app_router.dart';
 
 class LocalNotificationService {
   static Future<void> requestLocalNotificationsPermission() async {
@@ -17,13 +18,26 @@ class LocalNotificationService {
       android: androidSettings,
     );
 
-    await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+    await flutterLocalNotificationsPlugin.initialize(
+      initializationSettings,
+      onDidReceiveNotificationResponse: onDidReceiveNotificationResponse,
+    );
 
     // const initializationSettings = InitializationSettings(
     //   android: AndroidInitializationSettings('@mipmap/ic_launcher'),
     //   iOS: DarwinInitializationSettings(),
     // );
     // await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  }
+
+  static void onDidReceiveNotificationResponse(NotificationResponse response) {
+    // Manejar la interacción del usuario con la notificación aquí
+    // Por ejemplo, navegar a una pantalla específica
+    final payload = response.payload;
+    if (payload != null) {
+      // Navegar a la pantalla correspondiente usando el payload
+      appRouter.push('/notification-detail/$payload');
+    }
   }
 
   static Future<void> showLocalNotification({

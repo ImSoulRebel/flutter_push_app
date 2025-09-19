@@ -22,9 +22,21 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 }
 
 class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
+  final Future<void> Function() requestLocalNotificationsPermission;
+  final void Function({
+    required int id,
+    String? title,
+    String? body,
+    String? data,
+  })?
+  showLocalNotification;
+
   FirebaseMessaging messaging = FirebaseMessaging.instance;
 
-  NotificationsBloc() : super(const NotificationsState()) {
+  NotificationsBloc({
+    required this.requestLocalNotificationsPermission,
+    this.showLocalNotification,
+  }) : super(const NotificationsState()) {
     on<NotificationStatusChanged>(_notificationStatusChanged);
     on<NotificationReceived>(_notificationReceived);
 
@@ -93,8 +105,8 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
       imageUrl: imageUrl,
     );
 
-    if (Platform.isAndroid) {
-      LocalNotificationService.showLocalNotification(
+    if (showLocalNotification != null && Platform.isAndroid) {
+      showLocalNotification!(
         id: notification.hashCode,
         title: notification.title,
         body: notification.body,
@@ -120,7 +132,7 @@ class NotificationsBloc extends Bloc<NotificationsEvent, NotificationsState> {
       sound: true,
     );
 
-    await LocalNotificationService.requestLocalNotificationsPermission();
+    await requestLocalNotificationsPermission();
 
     add(
       NotificationStatusChanged(
